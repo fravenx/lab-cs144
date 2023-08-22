@@ -1,11 +1,16 @@
 #pragma once
 
 #include "byte_stream.hh"
-
+#include <unordered_map>
 #include <string>
 
 class Reassembler
 {
+private:
+  uint64_t next_byte = 0;
+  uint64_t bytes_pending_ = 0;
+  std::unordered_map<int64_t,char> hash = {};
+  bool eof = false;
 public:
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -28,7 +33,6 @@ public:
    * The Reassembler should close the stream after writing the last byte.
    */
   void insert( uint64_t first_index, std::string data, bool is_last_substring, Writer& output );
-
   // How many bytes are stored in the Reassembler itself?
   uint64_t bytes_pending() const;
 };
