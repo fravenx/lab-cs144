@@ -1,4 +1,4 @@
-Stanford CS 144 Networking Lab
+Stanford CS 144 Networking Lab 2023
 ==============================
 
 These labs are open to the public under the (friendly) request that to

@@ -28,3 +28,9 @@ uint64_t Reassembler::bytes_pending() const
 {
   return bytes_pending_;
 }
+
+uint64_t Reassembler::next_byte_() const
+{
+  return next_byte;
+}
+

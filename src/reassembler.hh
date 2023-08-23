@@ -35,4 +35,6 @@ public:
   void insert( uint64_t first_index, std::string data, bool is_last_substring, Writer& output );
   // How many bytes are stored in the Reassembler itself?
   uint64_t bytes_pending() const;
+
+  uint64_t next_byte_() const;
 };

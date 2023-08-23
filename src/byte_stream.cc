@@ -4,7 +4,8 @@
 using namespace std;
 
 ByteStream::ByteStream( uint64_t capacity_ ): capacity(capacity_) , stream(queue<char>()) , error(false) , 
-  closed(false) , bytes_pushed_(0) , bytes_buffered_(0) , bytes_popped_(0) , str(""){}
+  closed(false) , bytes_pushed_(0) , bytes_buffered_(0) , bytes_popped_(0) , str(""){
+  }
 
 void Writer::push( string data )
 {
