@@ -1,6 +1,9 @@
 Checkpoint 3 Writeup
 ====================
-
+难点：
+1. 定时器何时归0，何时设置为2倍
+2. payload设置为多少
+3. 
 My name: [your name here]
 
 My SUNet ID: [your sunetid here]

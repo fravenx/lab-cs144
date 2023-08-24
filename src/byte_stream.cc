@@ -67,6 +67,18 @@ void Reader::pop( uint64_t len )
   bytes_popped_ += len;
 }
 
+string Reader::pop2(uint64_t len) 
+{ 
+  string res = "";
+  for(uint64_t i = 0;i < len;i++) {
+    res += string(1,stream.front());
+    stream.pop();
+  }
+  str = str.substr(len);
+  bytes_popped_ += len;
+  return res;
+}
+
 uint64_t Reader::bytes_buffered() const
 {
   // Your code here.
