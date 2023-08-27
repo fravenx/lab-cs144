@@ -41,8 +41,6 @@ private:
 
   // IP (known as Internet-layer or network-layer) address of the interface
   Address ip_address_;
-
-  std::unordered_map<uint32_t,EthernetAddress> mapping = {};
   std::unordered_map<uint32_t,uint64_t> mapping_timer = {};
   std::queue<EthernetFrame> sending_queue = {};
   std::unordered_map<uint32_t,InternetDatagram> waiting_arp = {};
@@ -54,6 +52,8 @@ private:
 public:
   // Construct a network interface with given Ethernet (network-access-layer) and IP (internet-layer)
   // addresses
+  std::unordered_map<uint32_t,EthernetAddress> mapping = {};
+
   NetworkInterface( const EthernetAddress& ethernet_address, const Address& ip_address );
 
   // Access queue of Ethernet frames awaiting transmission
@@ -74,4 +74,6 @@ public:
 
   // Called periodically when time elapses
   void tick( size_t ms_since_last_tick );
+
+  Address get_ip_address();
 };

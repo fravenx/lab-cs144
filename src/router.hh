@@ -4,7 +4,6 @@
 
 #include <optional>
 #include <queue>
-#include <unordered_map>
 
 // A wrapper for NetworkInterface that makes the host-side
 // interface asynchronous: instead of returning received datagrams
@@ -25,7 +24,9 @@ public:
 
   // - If type is IPv4, pushes to the `datagrams_out` queue for later retrieval by the owner.
   // - If type is ARP request, learn a mapping from the "sender" fields, and send an ARP reply.
-  // - If type is ARP reply, learn a mapping from the "target" fields.
+  // - If type is ARP reply, learn a mapping from the "target" fields. fuck your "target" fields,in your test you 
+  // - specifically writes mapping from the "sender" fields in arp reply message. You made me rewrite the network_interface 
+  // - and it turns out to be wrong.
   //
   // \param[in] frame the incoming Ethernet frame
   void recv_frame( const EthernetFrame& frame )
@@ -55,7 +56,9 @@ class Router
 {
   // The router's collection of network interfaces
   std::vector<AsyncNetworkInterface> interfaces_ {};
- 
+  std::vector<std::pair<uint32_t,uint8_t>> routes {};
+  std::vector<std::optional<Address>> next_hop_v {};
+  std::vector<size_t> interface_num_v {};
 public:
   // Add an interface to the router
   // interface: an already-constructed network interface
@@ -72,7 +75,7 @@ public:
   // Add a route (a forwarding rule)
   void add_route( uint32_t route_prefix,
                   uint8_t prefix_length,
-                  std::optional<Address> next_hop,
+                  std::optional<Address> next_hop_,
                   size_t interface_num );
 
   // Route packets between the interfaces. For each interface, use the

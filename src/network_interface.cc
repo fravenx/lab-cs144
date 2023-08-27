@@ -119,3 +119,7 @@ optional<EthernetFrame> NetworkInterface::maybe_send()
   sending_queue.pop();
   return x;
 }
+
+Address NetworkInterface::get_ip_address() {
+  return ip_address_;
+}
