@@ -49,7 +49,7 @@ void TCPSender::push( Reader& outbound_stream )
   uint64_t win_size = window_size > 0? window_size:1;
   if(!syn_) {
     message.SYN = true;
-    if(outbound_stream.is_finished() && abs_ackno + win_size > next_byte_tosend + 1) message.FIN = true,fin_ = true;
+    if(outbound_stream.is_finished() && abs_ackno + win_size > next_byte_tosend) message.FIN = true,fin_ = true;
     sendTCPMessage(message);
     syn_ = true;
     return;
@@ -60,11 +60,11 @@ void TCPSender::push( Reader& outbound_stream )
     fin_ = true;
     return; 
   }
-
+  // outstanding_size = next_byte_tosend - abs_ackno
   while(outbound_stream.bytes_buffered() && abs_ackno + win_size > next_byte_tosend) {
-    uint64_t size = min(TCPConfig::MAX_PAYLOAD_SIZE,win_size - (next_byte_tosend - abs_ackno));
+    uint64_t size = min(TCPConfig::MAX_PAYLOAD_SIZE,win_size - outstanding_size);
     message.payload = outbound_stream.pop2(min(size, outbound_stream.bytes_buffered()));
-    if(outbound_stream.is_finished() && message.sequence_length() < win_size) message.FIN = true,fin_ = true;
+    if(outbound_stream.is_finished() && next_byte_tosend + message.sequence_length() < win_size + abs_ackno) message.FIN = true,fin_ = true;
     sendTCPMessage(message);
   }
 
@@ -112,9 +112,6 @@ void TCPSender::tick( const size_t ms_since_last_tick )
     if(window_size > 0 || msg.SYN) {
       RTO_ms_ *= 2;
       consecutive_retransmissions_++;
-    }
-    else if(window_size == 0) {
-      send_empty_message();
     }
   }
 }
